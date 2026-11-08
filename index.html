@@ -35,19 +35,56 @@
 <footer>신광천막사 | 천막·렉산·강판 시공 상담 환영</footer>
 <a class="fixed" href="tel:01037400101">📞 신광천막사 전화 상담</a>
 <script>
-const feed='https://rss.blog.naver.com/shin_gwang_.xml';
-const proxy='https://api.allorigins.win/raw?url='+encodeURIComponent(feed);
-fetch(proxy).then(r=>{if(!r.ok)throw Error('RSS 오류');return r.text()}).then(t=>{
-const xml=new DOMParser().parseFromString(t,'application/xml');
-if(xml.querySelector('parsererror'))throw Error('XML 오류');
-const items=[...xml.querySelectorAll('item')].slice(0,6);
-if(!items.length)throw Error('게시물 없음');
-document.getElementById('posts').replaceChildren(...items.map(item=>{
-const div=document.createElement('div');div.className='post';
-const a=document.createElement('a');a.href=item.querySelector('link')?.textContent||'https://blog.naver.com/shin_gwang_';a.target='_blank';a.rel='noopener';
-a.textContent=item.querySelector('title')?.textContent||'시공 사례';
-div.appendChild(a);return div;
-}));
-}).catch(()=>{document.getElementById('posts').textContent='시공 사례는 네이버 블로그에서 확인하실 수 있습니다.'});
+(async function () {
+  const container = document.getElementById('posts');
+  if (!container) return;
+
+  try {
+    const response = await fetch(
+      './posts.json?v=' + Date.now(),
+      { cache: 'no-store' }
+    );
+
+    if (!response.ok) {
+      throw new Error('게시글 파일을 읽지 못했습니다.');
+    }
+
+    const posts = await response.json();
+
+    if (!Array.isArray(posts) || posts.length === 0) {
+      throw new Error('게시글이 없습니다.');
+    }
+
+    container.replaceChildren();
+
+    posts.slice(0, 10).forEach(post => {
+      if (!post.title || !post.link) return;
+
+      const url = new URL(post.link);
+      if (!['https:', 'http:'].includes(url.protocol)) return;
+
+      const div = document.createElement('div');
+      div.className = 'post';
+
+      const link = document.createElement('a');
+      link.href = url.href;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      link.textContent = post.title;
+
+      div.appendChild(link);
+      container.appendChild(div);
+    });
+
+    if (!container.children.length) {
+      throw new Error('표시할 게시글이 없습니다.');
+    }
+
+  } catch (error) {
+    console.error('블로그 연동 오류:', error);
+    container.textContent =
+      '시공 사례는 아래 네이버 블로그에서 확인해 주세요.';
+  }
+})();
 </script>
 </body></html>
