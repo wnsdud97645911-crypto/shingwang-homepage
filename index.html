@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>신광천막사 | 천막·렉산·강판 시공 전문</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,'Malgun Gothic',sans-serif;color:#222;line-height:1.7}header{background:#171717;color:white;padding:18px 20px;display:flex;justify-content:space-between;align-items:center}header strong{font-size:23px}a{color:inherit}.hero{background:#292929;color:white;padding:75px 22px;text-align:center}.hero h1{font-size:32px;line-height:1.4}.btn{display:inline-block;background:#f4c542;color:#111;padding:14px 25px;border-radius:8px;text-decoration:none;font-weight:bold;margin:8px}section{padding:48px 20px;max-width:1000px;margin:auto}h2{font-size:25px}.services{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}.service{background:#f3f3f3;padding:22px 12px;border-radius:10px;text-align:center;font-weight:bold}.post{padding:20px 0;border-bottom:1px solid #ddd}.post a{color:#222;text-decoration:none;font-weight:bold}.muted{color:#666}footer{background:#171717;color:white;text-align:center;padding:30px 15px}.fixed{position:fixed;bottom:16px;left:5%;width:90%;background:#f4c542;color:#111;text-align:center;text-decoration:none;padding:15px;border-radius:12px;font-weight:bold;box-shadow:0 3px 15px #0004}
+</style>
+</head>
+<body>
+<header><strong>신광천막사</strong><span>천막 시공 전문</span></header>
+<div class="hero">
+<h1>튼튼한 시공, 믿을 수 있는 신광천막사</h1>
+<p>천막 · 렉산폴리카보네이트 · 강판 · 맞춤 제작 시공</p>
+<a class="btn" href="tel:01037400101">전화 상담하기</a>
+</div>
+<section><h2>시공 분야</h2><div class="services">
+<div class="service">렉산·폴리카보네이트</div>
+<div class="service">강판 시공</div>
+<div class="service">아스테이지천막</div>
+<div class="service">우레탄천막</div>
+<div class="service">자바라천막</div>
+<div class="service">창고천막</div>
+</div></section>
+<section><h2>최근 시공 사례</h2><p class="muted">네이버 블로그에서 실제 시공 현장을 확인하세요.</p>
+<div id="posts"><p>블로그 게시물을 불러오는 중입니다.</p></div>
+<p><a class="btn" href="https://blog.naver.com/shin_gwang_" target="_blank" rel="noopener">네이버 블로그 보기</a></p>
+</section>
+<section><h2>시공 문의 및 오시는 길</h2>
+<p><b>휴대전화:</b> <a href="tel:01037400101">010-3740-0101</a></p>
+<p><b>사무실:</b> <a href="tel:0317587856">031-758-7856</a></p>
+<p><b>주소:</b> 경기도 성남시 중원구 하대원동 139-3 1층 신광천막사</p>
+</section>
+<footer>신광천막사 | 천막·렉산·강판 시공 상담 환영</footer>
+<a class="fixed" href="tel:01037400101">📞 신광천막사 전화 상담</a>
+<script>
+const feed='https://rss.blog.naver.com/shin_gwang_.xml';
+const proxy='https://api.allorigins.win/raw?url='+encodeURIComponent(feed);
+fetch(proxy).then(r=>{if(!r.ok)throw Error('RSS 오류');return r.text()}).then(t=>{
+const xml=new DOMParser().parseFromString(t,'application/xml');
+if(xml.querySelector('parsererror'))throw Error('XML 오류');
+const items=[...xml.querySelectorAll('item')].slice(0,6);
+if(!items.length)throw Error('게시물 없음');
+document.getElementById('posts').replaceChildren(...items.map(item=>{
+const div=document.createElement('div');div.className='post';
+const a=document.createElement('a');a.href=item.querySelector('link')?.textContent||'https://blog.naver.com/shin_gwang_';a.target='_blank';a.rel='noopener';
+a.textContent=item.querySelector('title')?.textContent||'시공 사례';
+div.appendChild(a);return div;
+}));
+}).catch(()=>{document.getElementById('posts').textContent='시공 사례는 네이버 블로그에서 확인하실 수 있습니다.'});
+</script>
+</body></html>
