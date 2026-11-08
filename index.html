@@ -6,6 +6,52 @@
 <title>신광천막사 | 천막·렉산·강판 시공 전문</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:Arial,'Malgun Gothic',sans-serif;color:#222;line-height:1.7}header{background:#171717;color:white;padding:18px 20px;display:flex;justify-content:space-between;align-items:center}header strong{font-size:23px}a{color:inherit}.hero{background:#292929;color:white;padding:75px 22px;text-align:center}.hero h1{font-size:32px;line-height:1.4}.btn{display:inline-block;background:#f4c542;color:#111;padding:14px 25px;border-radius:8px;text-decoration:none;font-weight:bold;margin:8px}section{padding:48px 20px;max-width:1000px;margin:auto}h2{font-size:25px}.services{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}.service{background:#f3f3f3;padding:22px 12px;border-radius:10px;text-align:center;font-weight:bold}.post{padding:20px 0;border-bottom:1px solid #ddd}.post a{color:#222;text-decoration:none;font-weight:bold}.muted{color:#666}footer{background:#171717;color:white;text-align:center;padding:30px 15px}.fixed{position:fixed;bottom:16px;left:5%;width:90%;background:#f4c542;color:#111;text-align:center;text-decoration:none;padding:15px;border-radius:12px;font-weight:bold;box-shadow:0 3px 15px #0004}
+.post-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:18px;
+  margin-top:24px;
+}
+.post-card{
+  display:block;
+  background:#fff;
+  border:1px solid #e5e5e5;
+  border-radius:14px;
+  overflow:hidden;
+  text-decoration:none;
+  color:#222;
+  box-shadow:0 3px 12px rgba(0,0,0,.06);
+  transition:transform .2s;
+}
+.post-card:hover{transform:translateY(-3px)}
+.post-image{
+  width:100%;
+  aspect-ratio:4/3;
+  object-fit:cover;
+  display:block;
+  background:#eee;
+}
+.post-placeholder{
+  aspect-ratio:4/3;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#f1f1f1;
+  color:#777;
+  font-size:14px;
+}
+.post-info{padding:14px}
+.post-title{
+  font-size:15px;
+  font-weight:700;
+  line-height:1.5;
+  margin:0 0 8px;
+  word-break:keep-all;
+}
+.post-more{font-size:12px;color:#777}
+@media(min-width:768px){
+  .post-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
 </style>
 </head>
 <body>
@@ -35,54 +81,80 @@
 <footer>신광천막사 | 천막·렉산·강판 시공 상담 환영</footer>
 <a class="fixed" href="tel:01037400101">📞 신광천막사 전화 상담</a>
 <script>
-(async function () {
-  const container = document.getElementById('posts');
-  if (!container) return;
+(async function(){
+  const container=document.getElementById('posts');
+  if(!container)return;
 
-  try {
-    const response = await fetch(
-      './posts.json?v=' + Date.now(),
-      { cache: 'no-store' }
+  try{
+    const response=await fetch(
+      './posts.json?v='+Date.now(),
+      {cache:'no-store'}
     );
+    if(!response.ok)throw new Error('파일 읽기 실패');
 
-    if (!response.ok) {
-      throw new Error('게시글 파일을 읽지 못했습니다.');
-    }
-
-    const posts = await response.json();
-
-    if (!Array.isArray(posts) || posts.length === 0) {
-      throw new Error('게시글이 없습니다.');
+    const posts=await response.json();
+    if(!Array.isArray(posts)||!posts.length){
+      throw new Error('게시글 없음');
     }
 
     container.replaceChildren();
+    container.className='post-grid';
 
-    posts.slice(0, 10).forEach(post => {
-      if (!post.title || !post.link) return;
+    posts.slice(0,10).forEach(post=>{
+      if(!post.title||!post.link)return;
 
-      const url = new URL(post.link);
-      if (!['https:', 'http:'].includes(url.protocol)) return;
+      const url=new URL(post.link);
+      if(!['https:','http:'].includes(url.protocol))return;
 
-      const div = document.createElement('div');
-      div.className = 'post';
+      const card=document.createElement('a');
+      card.className='post-card';
+      card.href=url.href;
+      card.target='_blank';
+      card.rel='noopener noreferrer';
 
-      const link = document.createElement('a');
-      link.href = url.href;
-      link.target = '_blank';
-      link.rel = 'noopener noreferrer';
-      link.textContent = post.title;
+      if(post.image){
+        const img=document.createElement('img');
+        img.className='post-image';
+        img.src=post.image;
+        img.alt=post.title;
+        img.loading='lazy';
+        img.onerror=()=>{
+          const placeholder=document.createElement('div');
+          placeholder.className='post-placeholder';
+          placeholder.textContent='시공사진 준비 중';
+          img.replaceWith(placeholder);
+        };
+        card.appendChild(img);
+      }else{
+        const placeholder=document.createElement('div');
+        placeholder.className='post-placeholder';
+        placeholder.textContent='시공사진 준비 중';
+        card.appendChild(placeholder);
+      }
 
-      div.appendChild(link);
-      container.appendChild(div);
+      const info=document.createElement('div');
+      info.className='post-info';
+
+      const title=document.createElement('p');
+      title.className='post-title';
+      title.textContent=post.title;
+
+      const more=document.createElement('span');
+      more.className='post-more';
+      more.textContent='시공 사례 자세히 보기 →';
+
+      info.append(title,more);
+      card.appendChild(info);
+      container.appendChild(card);
     });
 
-    if (!container.children.length) {
-      throw new Error('표시할 게시글이 없습니다.');
+    if(!container.children.length){
+      throw new Error('표시할 게시글 없음');
     }
-
-  } catch (error) {
-    console.error('블로그 연동 오류:', error);
-    container.textContent =
+  }catch(error){
+    console.error(error);
+    container.className='';
+    container.textContent=
       '시공 사례는 아래 네이버 블로그에서 확인해 주세요.';
   }
 })();
