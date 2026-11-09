@@ -187,6 +187,46 @@ body {
 body {
   padding-bottom: 100px;
 }
+/* 메인사진 위쪽 여백 줄이기 */
+.hero {
+  padding-top: 35px !important;
+  padding-bottom: 65px !important;
+}
+
+/* 대표사진 크기 및 간격 */
+.hero > img {
+  width: 100%;
+  height: auto;
+  max-height: 420px;
+  object-fit: cover;
+  margin-bottom: 24px !important;
+}
+
+/* 제목과 설명 간격 */
+.hero h1 {
+  margin-top: 20px;
+  margin-bottom: 18px;
+}
+.hero p {
+  margin-bottom: 24px;
+}
+
+/* 메인 화면의 중복 전화 버튼 숨기기 */
+.hero .btn {
+  display: none !important;
+}
+
+/* 하단 고정 전화 상담 버튼 유지 */
+.fixed {
+  background: #FFD43B !important;
+  color: #111111 !important;
+  z-index: 9999;
+}
+
+/* 고정 버튼에 가려지는 내용 줄이기 */
+body {
+  padding-bottom: 110px;
+}
 </style>
 </head>
 <body>
