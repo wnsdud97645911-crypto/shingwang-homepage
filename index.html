@@ -312,6 +312,19 @@ header strong {
     grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
   }
 }
+.services .service .service-photo {
+  display: block;
+  width: 100%;
+  height: 130px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  flex-shrink: 0;
+}
+
+.services .service:has(.service-photo) {
+  justify-content: flex-start;
+}
 </style>
 </head>
 <body>
@@ -327,7 +340,7 @@ header strong {
   <h2>시공 분야</h2>
   <div class="services">
     <div class="service">
-      <h3>렉산 · 폴리카보네이트</h3>
+      <img src="images/service-lexan.png" alt="신광천막사 렉산 폴리카보네이트 시공사진" class="service-photo" loading="lazy"><h3>렉산 · 폴리카보네이트</h3>
       <p>채광과 내구성을 고려한 지붕 및 벽체 시공</p>
     </div>
     <div class="service">
