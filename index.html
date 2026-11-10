@@ -489,4 +489,29 @@ header strong {
   }
 })();
 </script>
+<script>
+document.querySelectorAll('.services .service').forEach((card) => {
+  const title = card.querySelector('h3');
+  if (!title) return;
+
+  const keyword = title.textContent.includes('폴리카보네이트')
+    ? '렉산'
+    : title.textContent.replace(/천막|시공/g, '').trim();
+
+  const openCases = () => {
+    const url = 'https://m.search.naver.com/search.naver?where=m_blog&query='
+      + encodeURIComponent('신광천막사 ' + keyword + ' 시공');
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
+
+  card.setAttribute('role', 'link');
+  card.setAttribute('tabindex', '0');
+  card.setAttribute('aria-label', title.textContent + ' 시공 사례 검색');
+
+  card.addEventListener('click', openCases);
+  card.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') openCases();
+  });
+});
+</script>
 </body></html>
