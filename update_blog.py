@@ -100,6 +100,28 @@ for index, item in enumerate(
         "date": date,
         "image": image_path
     })
+# 시공 분야별 최신 블로그 글 자동 분류
+categories = {
+    "asteiji": ["아스테이지", "아스테이지천막", "투명천막", "투명 천막"],
+    "urethane": ["우레탄", "우레탄천막", "우레탄 천막"]
+}
+
+latest_by_category = {}
+
+for post in posts:
+    title_text = post["title"].replace(" ", "").lower()
+
+    for category, keywords in categories.items():
+        if category in latest_by_category:
+            continue
+
+        if any(keyword.replace(" ", "").lower() in title_text for keyword in keywords):
+            latest_by_category[category] = post["link"]
+
+Path("category_links.json").write_text(
+    json.dumps(latest_by_category, ensure_ascii=False, indent=2),
+    encoding="utf-8"
+)
 
 if not posts:
     raise RuntimeError("RSS 게시글이 없습니다.")
