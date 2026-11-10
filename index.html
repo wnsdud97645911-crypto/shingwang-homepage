@@ -348,11 +348,13 @@ header strong {
   text-align: center;
 }
   .view-more {
-  display: inline-block;
+  display: block;
   margin-top: 12px;
   color: #1769aa;
-  font-size: 14px;
+  font-size: clamp(10px, 2.7vw, 14px);
   font-weight: 700;
+  white-space: nowrap;
+  text-align: center;
   transition: color 0.2s ease;
 }
 
