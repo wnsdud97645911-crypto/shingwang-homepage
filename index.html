@@ -575,7 +575,7 @@ header strong {
       card.setAttribute('tabindex', '0');
 
       const openPost = () => {
-        window.open(url.href, '_blank', 'noopener,noreferrer');
+        window.location.href = url.href;
       };
 
       card.addEventListener('click', openPost);
