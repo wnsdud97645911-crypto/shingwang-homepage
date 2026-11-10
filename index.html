@@ -542,4 +542,50 @@ header strong {
   });
 })();
 </script>
+<script>
+(async function () {
+  try {
+    const response = await fetch(
+      './category_links.json?v=' + Date.now(),
+      { cache: 'no-store' }
+    );
+    if (!response.ok) return;
+
+    const links = await response.json();
+
+    ['asteiji', 'urethane'].forEach(category => {
+      const card = document.querySelector(
+        '.services .service[data-category="' + category + '"]'
+      );
+      if (!card) return;
+
+      const entry = links[category];
+      const link = typeof entry === 'string'
+        ? entry
+        : entry && (entry.link || entry.url);
+
+      if (!link) return;
+
+      const url = new URL(link, window.location.href);
+      if (!['https:', 'http:'].includes(url.protocol)) return;
+      if (!['blog.naver.com', 'm.blog.naver.com'].includes(url.hostname)) return;
+
+      card.style.cursor = 'pointer';
+      card.setAttribute('role', 'link');
+      card.setAttribute('tabindex', '0');
+
+      const openPost = () => {
+        window.open(url.href, '_blank', 'noopener,noreferrer');
+      };
+
+      card.addEventListener('click', openPost);
+      card.addEventListener('keydown', event => {
+        if (event.key === 'Enter') openPost();
+      });
+    });
+  } catch (error) {
+    console.error('분야별 블로그 연결 오류:', error);
+  }
+})();
+</script>
 </body></html>
