@@ -325,6 +325,18 @@ header strong {
 .services .service:has(.service-photo) {
   justify-content: flex-start;
 }
+.services .service {
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.services .service:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 22px rgba(0,0,0,0.18);
+}
+.services .service:focus-visible {
+  outline: 3px solid #FFD43B;
+  outline-offset: 3px;
+}
 </style>
 </head>
 <body>
