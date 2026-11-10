@@ -74,7 +74,7 @@ with urllib.request.urlopen(
 
 posts = []
 for index, item in enumerate(
-    root.findall("./channel/item")[:10]
+    root.findall("./channel/item")[:50]
 ):
     title = item.findtext("title", "").strip()
     link = item.findtext("link", "").strip()
