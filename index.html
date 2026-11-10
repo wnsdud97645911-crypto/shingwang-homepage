@@ -490,28 +490,56 @@ header strong {
 })();
 </script>
 <script>
-document.querySelectorAll('.services .service').forEach((card) => {
-  const title = card.querySelector('h3');
-  if (!title) return;
+(async function () {
+  const cards = document.querySelectorAll('.services .service');
+  const keywords = [
+    ['렉산', '폴리카보네이트'],
+    ['강판', '지붕'],
+    ['아스테이지'],
+    ['우레탄'],
+    ['자바라'],
+    ['창고천막', '창고 천막']
+  ];
 
-  const keyword = title.textContent.includes('폴리카보네이트')
-    ? '렉산'
-    : title.textContent.replace(/천막|시공/g, '').trim();
+  let posts = [];
+  try {
+    const response = await fetch('./posts.json?v=' + Date.now());
+    if (!response.ok) throw new Error('게시글 읽기 실패');
+    posts = await response.json();
+    if (!Array.isArray(posts)) posts = [];
+  } catch (error) {
+    console.warn('시공 분야 연결 오류:', error);
+  }
 
-  const openCases = () => {
-    const url = 'https://m.search.naver.com/search.naver?where=m_blog&query='
-      + encodeURIComponent('신광천막사 ' + keyword + ' 시공');
-    window.open(url, '_blank', 'noopener,noreferrer');
-  };
+  cards.forEach((card, index) => {
+    const title = card.querySelector('h3');
+    if (!title) return;
 
-  card.setAttribute('role', 'link');
-  card.setAttribute('tabindex', '0');
-  card.setAttribute('aria-label', title.textContent + ' 시공 사례 검색');
+    const words = keywords[index] || [];
+    const match = posts.find(post =>
+      post.title && post.link &&
+      words.some(word => post.title.includes(word)) &&
+      /^https?:\/\//.test(post.link)
+    );
 
-  card.addEventListener('click', openCases);
-  card.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') openCases();
+    const openCases = () => {
+      const url = match
+        ? match.link
+        : 'https://m.blog.naver.com/shin_gwang_';
+      window.open(url, '_blank', 'noopener,noreferrer');
+    };
+
+    card.setAttribute('role', 'link');
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('aria-label', title.textContent + ' 시공 사례 보기');
+    card.addEventListener('click', openCases);
+    card.addEventListener('keydown', event => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        openCases();
+      }
+    });
   });
-});
+})();
 </script>
 </body></html>
